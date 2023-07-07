@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Real-time Messages</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      socket.on("databaseError", (error) => {
+        const messagesContainer = document.getElementById("error");
+        const newMessage = document.createElement("li");
+        newMessage.textContent = error;
+        messagesContainer.appendChild(newMessage);
+      });
+    </script>
+  </head>
+  <body>
+    <ul id="error"></ul>
+  </body>
+</html>
