@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Real-time Messages</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="connect-src http://localhost:3000"
+    />
+    <script src="https://cdn.socket.io/4.2.0/socket.io.js"></script>
+    <script>
+      var socket = io("http://localhost:3000");
+
+      socket.on("connect", () => {
+        console.log("frontend too connect");
+      });
+
+      socket.on("messagetofrontend", (message) => {
+        const messagesContainer = document.getElementById("message");
+        const newMessage = document.createElement("li");
+        newMessage.textContent = message;
+        messagesContainer.appendChild(newMessage);
+      });
+    </script>
+  </head>
+  <body>
+    <ul id="message"></ul>
+  </body>
+</html>
