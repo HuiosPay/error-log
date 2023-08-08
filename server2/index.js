@@ -1,30 +1,44 @@
 const express = require("express");
-const cors = require("cors");
-const io = require("socket.io-client");
-const socket = io("http://localhost:3000");
-
 const app = express();
-const http = require("http").Server(app);
-
-const port = 4000;
-
-app.use(
-  cors({
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const cors = require("cors");
+const clientServer = new Server(server, {
+  cors: {
     origin: "*",
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
     credentials: false,
-  })
-);
-
-socket.on("connect", () => {
-  console.log("s2 is connected to s1");
+  },
 });
 
-socket.on("message", (message) => {
+const publisherServerIo = require("socket.io-client");
+const publisherServer = publisherServerIo("http://localhost:3000");
+
+const port = 4000;
+
+publisherServer.on("connect", () => {
+  console.log("Server 2 is connected to Server 1");
+});
+
+publisherServer.on("message", (message) => {
   console.log("this is the message:", message);
 
-  socket.emit("messagefromservertofrontend", message);
+  clientServer.emit("message-from-server-to-frontend", message);
 });
+
+clientServer.on("connection", (socket) => {
+  console.log("Client connected to server 2");
+
+  sendMessageToClient(socket);
+});
+
+function sendMessageToClient(socket) {
+  // Emit the error message to Server 2
+  socket.emit("message", (error) => {
+    console.log("Server2 emit error", error);
+  });
+}
 
 // Define a route for the root URL
 app.get("/", (req, res) => {
@@ -32,4 +46,4 @@ app.get("/", (req, res) => {
 });
 
 // Start the server
-http.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));

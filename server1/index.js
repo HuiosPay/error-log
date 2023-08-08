@@ -9,20 +9,17 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("s1 is connected to s2");
+  console.log("Server1 is connected to Server2");
 
   simulateDatabaseError(socket);
 });
 
 function simulateDatabaseError(socket) {
   // create a database error for now
-  const error = "Database connection error server 1";
+  const error = "Hailing from server 1";
 
   // Emit the error message to Server 2
   socket.emit("message", error);
-
-  // Emit the error message to frontend
-  socket.emit("messagetofrontend", error);
 }
 
 server.listen(3000, () => {
