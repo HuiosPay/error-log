@@ -22,9 +22,47 @@ publisherServer.on("connect", () => {
 });
 
 publisherServer.on("message", (message) => {
-  console.log("this is the message:", message);
+  // console.log("this is the message:", message);
 
-  clientServer.emit("message-from-server-to-frontend", message);
+  function sendErrorBasedOnType(message) {
+    switch (message.messageType) {
+      case 0:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Database connection failed.");
+        break;
+      case 1:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Table not found.");
+        break;
+      case 2:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Query syntax error.");
+        break;
+      case 3:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Data integrity violation.");
+        break;
+      case 4:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Insufficient permissions.");
+        break;
+      case 5:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Server timeout.");
+        break;
+      case 6:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Unknown database error.");
+        break;
+      default:
+        clientServer.emit("message-from-server-to-frontend", message);
+        console.log("Invalid message type.");
+    }
+  }
+
+  sendErrorBasedOnType(message);
+
+  // clientServer.emit("message-from-server-to-frontend", message);
 });
 
 clientServer.on("connection", (socket) => {

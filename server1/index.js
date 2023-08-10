@@ -16,7 +16,13 @@ io.on("connection", (socket) => {
 
 function simulateDatabaseError(socket) {
   // create a database error for now
-  const error = "Hailing from server 1";
+  // const error = "Hailing from server 1";
+
+  const error = {
+    messageType: 3,
+    errorMessage: "Critical Error",
+    message: `This is the error`,
+  };
 
   // Emit the error message to Server 2
   socket.emit("message", error);
